@@ -7,6 +7,8 @@ import CreateInterviewDialog from '@/app/(routes)/_components/CreateInterviewDia
 async function Dashboard() {
     const session = await auth();
     const interviewList: any[] = []
+    // server compoenet
+
 
     return (
         <div className='py-20 px-10 md:px-28 lg:px-44 xl:px-56 '>
