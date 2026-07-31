@@ -12,12 +12,27 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String?
-  username  String   @unique
-  email     String   @unique
-  imageURL  String   @default("")
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String             @id @default(uuid())
+  name              String?
+  username          String             @unique
+  email             String             @unique
+  imageURL          String             @default("")
+  password          String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  interviewSessions InterviewSession[]
+}
+
+model InterviewSession {
+  id                 String   @id @default(uuid())
+  interviewQuestions String?  @db.Text
+  resumeURL          String?
+  jobTitle           String?
+  jobDescription     String?  @db.Text
+  experienceLevel    String?
+  status             String   @default("draft")
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
