@@ -23,6 +23,8 @@ const MenuOption = [
 async function AppHeader() {
     const session = await auth()
 
+    // console.log(session?.user.email)
+
     return (
         <nav className="flex w-full items-center justify-between border-b border-neutral-200 dark:border-neutral-800 px-6 py-4">
             <Link href="/" className='flex items-center gap-2'>

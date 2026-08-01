@@ -46,6 +46,12 @@ function CreateInterviewDialog() {
         try {
             const res = await axios.post("/api/generate-interview-questions", formData_)
             console.log("Success:", res.data)
+
+            if (res?.data?.status == 429) {
+                console.log(res?.data?.result)
+                return;
+            }
+
         } catch (e) {
             console.error("Error submitting interview:", e)
         } finally {

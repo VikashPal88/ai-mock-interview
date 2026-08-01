@@ -3,6 +3,8 @@ import ImageKit from "imagekit";
 import axios from "axios";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { aj } from "@/lib/arcjet";
+import { describe } from "zod/v4/core";
 
 const imagekit = new ImageKit({
     publicKey: process.env.IMAGEKIT_URL_PUBLIC_KEY!,
@@ -22,6 +24,18 @@ export async function POST(req: NextRequest) {
         const file = formData.get('file');
         const jobTitle = formData.get('jobTitle') as string | null;
         const jobDescription = formData.get('jobDescription') as string | null;
+
+        const decision = await aj.protect(req, { userId: session.user.email ?? '', requested: 5 });
+        console.log("Arcjet Decision", decision)
+
+        // @ts-ignore
+        if (decision?.reason?.remaining == 0) {
+            return NextResponse.json({
+                status: 429,
+                result: "No free credit remaiining, Try again after 24 Hour"
+            })
+        }
+
 
         const isFilePresent = file && typeof file !== 'string' && (file as File).size > 0;
 
