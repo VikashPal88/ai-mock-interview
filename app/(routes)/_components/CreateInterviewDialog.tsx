@@ -14,13 +14,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from '@/components/ui/button'
 import ResumeUpload from './ResumeUpload'
 import JobDescription from './JobDescription'
-import axios from "axios"
 import { Loader2Icon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import mockData from "@/lib/mockInterviewData.json"
+import { toast } from 'sonner'
 
 function CreateInterviewDialog() {
     const [formData, setFormData] = useState<any>();
     const [file, setFile] = useState<File | null>(null)
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
     const onHandleInputChange = (field: string, value: string) => {
         setFormData((prev: any) => ({
@@ -44,13 +47,21 @@ function CreateInterviewDialog() {
         }
 
         try {
-            const res = await axios.post("/api/generate-interview-questions", formData_)
-            console.log("Success:", res.data)
+            // COMMENTED OUT ORIGINAL API CALL FOR DEVELOPMENT
+            // const res = await axios.post("/api/generate-interview-questions", formData_)
+            // console.log("Success:", res.data)
 
-            if (res?.data?.status == 429) {
-                console.log(res?.data?.result)
+            // USING MOCK JSON DATA
+            const resData = mockData;
+            console.log("Mock Data:", resData);
+
+            if ((resData as any)?.status == 429) {
+                console.log((resData as any)?.result)
+                // toast.warning(res)
                 return;
             }
+
+            router.push(`/interview/${resData?.interviewSession?.id}`)
 
         } catch (e) {
             console.error("Error submitting interview:", e)
